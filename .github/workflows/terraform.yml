@@ -23,12 +23,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: WolfgangBaeck/REB3Modules
-    - name: Checkout Client
-      uses: actions/checkout@v3
 
     - name: Show Filesystem
       run: ls -l -R
-      
+
     # Install the preferred version of Terraform CLI 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
