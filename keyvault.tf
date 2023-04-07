@@ -28,6 +28,7 @@ resource "azurerm_key_vault" "kvOne" {
       "Get",
     ]
   }
+  tags = var.common_tags
 }
 
 #Create KeyVault VM password
@@ -40,4 +41,8 @@ resource "azurerm_key_vault_secret" "vmpassword" {
   name         = "vmpassword"
   value        = random_password.vmpassword.result
   key_vault_id = azurerm_key_vault.kvOne.id
+  tags         = var.common_tags
+  depends_on = [
+    azurerm_key_vault.kvOne
+  ]
 }

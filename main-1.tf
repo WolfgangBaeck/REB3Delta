@@ -28,11 +28,11 @@ module "client_network" {
   location             = var.location
   resource_group_name  = azurerm_resource_group.appgrp.name
   virtual_network_name = azurerm_virtual_network.appnetwork.name
-  client_name    = var.client_name
-  subnet_size    = var.subnet_size
-  address_prefix = var.virtual_network.address_prefix
-  settings = var.settings
-  tags     = var.common_tags
+  client_name          = var.client_name
+  subnet_size          = var.subnet_size
+  address_prefix       = var.virtual_network.address_prefix
+  settings             = var.settings
+  tags                 = var.common_tags
 }
 
 
@@ -46,6 +46,40 @@ module "storage" {
   tags                = var.common_tags
 }
 
+
+module "virtualmachines" {
+  source                                       = "./modules/virtualmachines"
+  location                                     = var.location
+  resource_group_name                          = azurerm_resource_group.appgrp.name
+  virtual_network_name                         = azurerm_virtual_network.appnetwork.name
+  client_name                                  = var.client_name
+  subnet_id                                    = module.client_network.subnets["Frontend"].id
+  application_gateway_backend_address_pool_ids = [for element in tolist(module.client_network.backend_address_pool) : (element.name == "backend-pool") ? element.id : ""]
+  number_of_machines                           = var.number_of_machines
+  settings                                     = var.settings
+  vm_password                                  = random_password.vmpassword.result
+  tags                                         = var.common_tags
+  depends_on = [
+    module.client_network,
+    azurerm_key_vault.kvOne
+  ]
+}
+
+locals {
+  databases = {
+    management = {
+      name      = "mgmt"
+      collation = "en_US.utf8"
+      charset   = "utf8"
+    }
+    reporting = {
+      name      = "reports"
+      collation = "en_US.utf8"
+      charset   = "utf8"
+    }
+  }
+
+}
 
 module "dbservers" {
   source              = "./modules/databases"
@@ -63,10 +97,7 @@ module "dbservers" {
   server_databases    = local.databases
   settings            = var.settings
   tags                = var.common_tags
-  depends_on = [
-    module.client_network,
-    azurerm_key_vault.kv1
-  ]
+  depends_on          = [azurerm_private_dns_zone_virtual_network_link.dnsvnetlink]
 }
 
 
