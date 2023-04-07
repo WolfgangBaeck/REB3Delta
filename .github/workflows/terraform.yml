@@ -7,7 +7,7 @@ on:
       - main
   pull_request:
     branches:
-      -main
+      - main
 
 env:
   TF_LOG: INFO
@@ -26,6 +26,9 @@ jobs:
     - name: Checkout Client
       uses: actions/checkout@v3
 
+    - name: Show Filesystem
+      run: ls -l -R
+      
     # Install the preferred version of Terraform CLI 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
