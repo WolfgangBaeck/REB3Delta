@@ -13,7 +13,7 @@ variable "settings" {
   type = map(string)
   default = {
     basestack   = "r3us"
-    environemnt = "delta"
+    environemnt = "walm"
   }
 }
 
@@ -22,14 +22,14 @@ variable "virtual_network" {
   description = "Name of network and address space in CIDR"
   default = {
     name           = "vnet"
-    address_space  = "10.1.0.0/16"
-    address_prefix = "10.1"
+    address_space  = "10.14.0.0/16"
+    address_prefix = "10.14"
   }
 }
 
 variable "client_name" {
   type    = string
-  default = "delta"
+  default = "walm"
 }
 
 variable "subnet_size" {
@@ -42,7 +42,7 @@ variable "common_tags" {
   type = map(string)
   default = {
     BillingEnvironment = "r3us"
-    BillingRetailer    = "delta"
+    BillingRetailer    = "walm"
     BillingApplication = "REB3"
   }
 }
