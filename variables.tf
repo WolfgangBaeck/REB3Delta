@@ -6,7 +6,7 @@ variable "subscription_id" {
 variable "location" {
   type        = string
   description = "The region for the deployment"
-  default     = "East US 2"
+  default     = "southcentralus"
 }
 
 variable "settings" {
