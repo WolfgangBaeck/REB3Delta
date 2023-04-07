@@ -24,7 +24,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dnsvnetlink" {
 
 
 module "client_network" {
-  source               = "./../modules/client_network"
+  source               = "./modules/client_network"
   location             = var.location
   resource_group_name  = azurerm_resource_group.appgrp.name
   virtual_network_name = azurerm_virtual_network.appnetwork.name
@@ -37,7 +37,7 @@ module "client_network" {
 
 
 module "storage" {
-  source              = "./../modules/storage"
+  source              = "./modules/storage"
   resource_group_name = azurerm_resource_group.appgrp.name
   location            = azurerm_resource_group.appgrp.location
   settings            = var.settings
@@ -48,7 +48,7 @@ module "storage" {
 
 
 module "virtualmachines" {
-  source                                       = "./../modules/virtualmachines"
+  source                                       = "./modules/virtualmachines"
   location                                     = var.location
   resource_group_name                          = azurerm_resource_group.appgrp.name
   virtual_network_name                         = azurerm_virtual_network.appnetwork.name
@@ -66,7 +66,7 @@ module "virtualmachines" {
 }
 
 module "dbservers" {
-  source              = "./../modules/databases"
+  source              = "./modules/databases"
   location            = var.location
   resource_group_name = azurerm_resource_group.appgrp.name
   client_name         = var.client_name
