@@ -69,22 +69,4 @@ module "dbservers" {
   ]
 }
 
-module "dbservers" {
-  source              = "./modules/databases"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.appgrp.name
-  client_name         = var.client_name
-  db_version          = var.db_version
-  db_subnet_id        = module.client_network.subnets["DB-Delegated"].id
-  private_dns_zone_id = azurerm_private_dns_zone.dbdnszone.id
-  admin_login         = var.admin_login
-  admin_pwd           = var.admin_pwd
-  zone                = "1"
-  storage             = var.storage
-  sku_name            = "GP_Standard_D4s_v3"
-  settings            = var.settings
-  tags                = var.common_tags
-  depends_on          = [azurerm_private_dns_zone_virtual_network_link.dnsvnetlink]
-}
-
 
