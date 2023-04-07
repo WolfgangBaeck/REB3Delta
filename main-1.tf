@@ -47,18 +47,22 @@ module "storage" {
 }
 
 
-module "virtualmachines" {
-  source                                       = "./modules/virtualmachines"
-  location                                     = var.location
-  resource_group_name                          = azurerm_resource_group.appgrp.name
-  virtual_network_name                         = azurerm_virtual_network.appnetwork.name
-  client_name                                  = var.client_name
-  subnet_id                                    = module.client_network.subnets["Frontend"].id
-  application_gateway_backend_address_pool_ids = [for element in tolist(module.client_network.backend_address_pool) : (element.name == "backend-pool") ? element.id : ""]
-  number_of_machines                           = var.number_of_machines
-  settings                                     = var.settings
-  vm_password                                  = random_password.vmpassword.result
-  tags                                         = var.common_tags
+module "dbservers" {
+  source              = "./modules/databases"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.appgrp.name
+  client_name         = var.client_name
+  db_version          = var.db_version
+  db_subnet_id        = module.client_network.subnets["DB-Delegated"].id
+  private_dns_zone_id = azurerm_private_dns_zone.dbdnszone.id
+  admin_login         = var.admin_login
+  admin_pwd           = var.admin_pwd
+  zone                = "1"
+  storage             = var.storage
+  sku_name            = "GP_Standard_D4s_v3"
+  server_databases    = local.databases
+  settings            = var.settings
+  tags                = var.common_tags
   depends_on = [
     module.client_network,
     azurerm_key_vault.kv1
