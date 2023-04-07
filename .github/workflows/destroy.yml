@@ -10,10 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # For destroy, checkout and init are necessary steps
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the preferred version of Terraform CLI 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.1.7
+
+    - name: Terraform Init
+      run: terraform init
+
     - name: Terraform destroy
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      run: terraform destroy -auto-approve -input=false
+      run: terraform destroy -auto-approve
