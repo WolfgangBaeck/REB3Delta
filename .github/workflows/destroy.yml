@@ -11,8 +11,16 @@ jobs:
 
     steps:
     # For destroy, checkout and init are necessary steps
-    - name: Checkout
+    # Checkout client files first to runner's root
+    - name: Checkout Client
       uses: actions/checkout@v3
+
+    # Checkout the module repository separate folder protecting root files
+    - name: Checkout Modules
+      uses: actions/checkout@v3
+      with:
+        repository: WolfgangBaeck/REB3Modules
+        path: modules
 
     # Install the preferred version of Terraform CLI 
     - name: Setup Terraform
