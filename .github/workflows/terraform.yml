@@ -1,6 +1,13 @@
 name: 'Terraform'
 
-on: [push,pull_request]
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      -main
 
 env:
   TF_LOG: INFO
@@ -11,8 +18,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
+    # Checkout the module repository to the GitHub Actions runner
+    - name: Checkout Modules
+      uses: actions/checkout@v3
+      with:
+        repository: WolfgangBaeck/REB3Modules
+    - name: Checkout Client
       uses: actions/checkout@v3
 
     # Install the preferred version of Terraform CLI 
