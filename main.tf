@@ -97,7 +97,10 @@ module "dbservers" {
   server_databases    = local.databases
   settings            = var.settings
   tags                = var.common_tags
-  depends_on          = [azurerm_private_dns_zone_virtual_network_link.dnsvnetlink]
+  depends_on          = [
+      azurerm_private_dns_zone_virtual_network_link.dnsvnetlink,
+      module.client_network,
+      azurerm_key_vault.kvOne]
 }
 
 
