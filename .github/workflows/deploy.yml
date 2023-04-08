@@ -45,6 +45,7 @@ jobs:
     # Initialize a new or existing Terraform working directory by creating initial files, 
     # loading any remote state, downloading modules, etc.
     - name: Terraform Init
+      working-directory: ./client/
       id: init
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -66,7 +67,7 @@ jobs:
     
     # Add a comment to pull requests with plan results
     # Still missing ability to upload to pull request see below:
-    
+
     #       github.rest.issues.createComment({
     #        issue_number: context.issue.number,
     #        owner: context.repo.owner,
