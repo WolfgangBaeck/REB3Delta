@@ -1,7 +1,13 @@
-name: 'Terraform'
+name: 'Deploy'
 
 on: 
   workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main  
 
 env:
   TF_LOG: INFO
@@ -12,19 +18,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the module repository to root file system    
+    # The order of checkouts is important because of cleaning and the step afterwards will not find anything
+    # unless there is a specific path specified!
+
+    # Checkout client files to root folder
+    - name: Checkout Client
+      uses: actions/checkout@v3
+
+
+    # Checkout the module repository to separate folder protecting root file system    
     - name: Checkout Modules
       uses: actions/checkout@v3
       with:
-        repository: WolfgangBaeck/REB3Modules    
-    - name: Show FileSystem 1
-      run: ls -R
-    # Checkout client files to separate folder protecting root
-    - name: Checkout Client
-      uses: actions/checkout@v3
-      with:
-        path: client
-    - name: Show FileSystem 2
+        repository: WolfgangBaeck/REB3Modules
+        path: modules
+
+    - name: Show FileSystem
       run: ls -R
 
     # Install the preferred version of Terraform CLI 
@@ -33,7 +42,8 @@ jobs:
       with:
         terraform_version: 1.1.7
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    # Initialize a new or existing Terraform working directory by creating initial files, 
+    # loading any remote state, downloading modules, etc.
     - name: Terraform Init
       id: init
       env:
@@ -42,7 +52,6 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       run: terraform init 
-
 
     # Run a terraform plan for pull requests only
     - name: Terraform Plan
@@ -56,6 +65,15 @@ jobs:
       run: terraform plan -no-color
     
     # Add a comment to pull requests with plan results
+    # Still missing ability to upload to pull request see below:
+
+    #       github.rest.issues.createComment({
+    #        issue_number: context.issue.number,
+    #        owner: context.repo.owner,
+    #        repo: context.repo.repo,
+    #        body: output
+    #      })
+
     - name: add-plan-comment
       id: comment
       uses: actions/github-script@v6

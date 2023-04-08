@@ -3,24 +3,40 @@ name: 'Destroy'
 on: 
   workflow_dispatch:
 
+env:
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
 jobs:
+
   terraform:
     name: 'Destroy Configuration'
     runs-on: ubuntu-latest
+    # Use the Bash shell regardless of whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
-    # For destroy, checkout and init are necessary steps
-    # Checkout client files first to runner's root
+    # The order of checkouts is important because of cleaning and the step afterwards will not find anything
+    # unless there is a specific path specified!
+
+    # Checkout client files to root folder
     - name: Checkout Client
       uses: actions/checkout@v3
 
-    # Checkout the module repository separate folder protecting root files
+
+    # Checkout the module repository to separate folder protecting root file system    
     - name: Checkout Modules
       uses: actions/checkout@v3
       with:
         repository: WolfgangBaeck/REB3Modules
         path: modules
+
+    - name: Show FileSystem
+      run: ls -R
 
     # Install the preferred version of Terraform CLI 
     - name: Setup Terraform
@@ -32,9 +48,4 @@ jobs:
       run: terraform init
 
     - name: Terraform destroy
-      env:
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       run: terraform destroy -auto-approve
