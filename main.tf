@@ -60,7 +60,7 @@ module "virtualmachines" {
   vm_password                                  = random_password.vmpassword.result
   tags                                         = var.common_tags
   depends_on = [
-    client_network/gateway_ip,
+    client_network.gateway_ip,
     azurerm_key_vault.kvOne
   ]
 }
