@@ -11,14 +11,13 @@ env:
 
 jobs:
 
-# Use the Bash shell regardless of whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-  defaults:
-    run:
-      shell: bash
-
   terraform:
     name: 'Destroy Configuration'
     runs-on: ubuntu-latest
+    # Use the Bash shell regardless of whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
     # For destroy, checkout and init are necessary steps
