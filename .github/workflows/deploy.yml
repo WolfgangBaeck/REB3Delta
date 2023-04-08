@@ -77,7 +77,6 @@ jobs:
     #      })
 
     - name: add-plan-comment
-      working-directory: ./client/
       id: comment
       uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
