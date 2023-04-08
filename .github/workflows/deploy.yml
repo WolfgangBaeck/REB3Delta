@@ -56,6 +56,7 @@ jobs:
 
     # Run a terraform plan for pull requests only
     - name: Terraform Plan
+      working-directory: ./client/    
       id: plan
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -100,6 +101,7 @@ jobs:
 
       # On push to main, build or change infrastructure according to Terraform configuration files
     - name: Terraform Apply
+      working-directory: ./client/    
       if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
