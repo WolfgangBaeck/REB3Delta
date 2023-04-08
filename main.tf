@@ -60,7 +60,7 @@ module "virtualmachines" {
   vm_password                                  = random_password.vmpassword.result
   tags                                         = var.common_tags
   depends_on = [
-    module.client_network,
+    client_network,
     azurerm_key_vault.kvOne
   ]
 }
@@ -99,7 +99,7 @@ module "dbservers" {
   tags                = var.common_tags
   depends_on          = [
       azurerm_private_dns_zone_virtual_network_link.dnsvnetlink,
-      module.client_network,
+      client_network,
       azurerm_key_vault.kvOne]
 }
 
