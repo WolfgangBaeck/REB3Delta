@@ -53,8 +53,8 @@ module "virtualmachines" {
   resource_group_name                          = azurerm_resource_group.appgrp.name
   virtual_network_name                         = azurerm_virtual_network.appnetwork.name
   client_name                                  = var.client_name
-  subnet_id                                    = module.client_network.subnets["Frontend"].id
-  application_gateway_backend_address_pool_ids = [for element in tolist(module.client_network.backend_address_pool) : (element.name == "backend-pool") ? element.id : ""]
+  subnet_id                                    = client_network.subnets["Frontend"].id
+  application_gateway_backend_address_pool_ids = [for element in tolist(client_network.backend_address_pool) : (element.name == "backend-pool") ? element.id : ""]
   number_of_machines                           = var.number_of_machines
   settings                                     = var.settings
   vm_password                                  = random_password.vmpassword.result
@@ -87,7 +87,7 @@ module "dbservers" {
   resource_group_name = azurerm_resource_group.appgrp.name
   client_name         = var.client_name
   db_version          = var.db_version
-  db_subnet_id        = module.client_network.subnets["DB-Delegated"].id
+  db_subnet_id        = client_network.subnets["DB-Delegated"].id
   private_dns_zone_id = azurerm_private_dns_zone.dbdnszone.id
   admin_login         = var.admin_login
   admin_pwd           = var.admin_pwd
