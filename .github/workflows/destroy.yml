@@ -3,8 +3,19 @@ name: 'Destroy'
 on: 
   workflow_dispatch:
 
+env:
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
 jobs:
+
+# Use the Bash shell regardless of whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+  defaults:
+    run:
+      shell: bash
+
   terraform:
     name: 'Destroy Configuration'
     runs-on: ubuntu-latest
@@ -32,9 +43,4 @@ jobs:
       run: terraform init
 
     - name: Terraform destroy
-      env:
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       run: terraform destroy -auto-approve
