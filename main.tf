@@ -99,7 +99,7 @@ module "dbservers" {
   tags                = var.common_tags
   depends_on          = [
       azurerm_private_dns_zone_virtual_network_link.dnsvnetlink,
-      client_network,
+      client_network.subnets,
       azurerm_key_vault.kvOne]
 }
 
